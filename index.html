@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sydes</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+
+    <style>
+      :root {
+        --bg: #f6f6f3;
+        --text: #111;
+        --muted: #5a5a5a;
+        --line: #d7d7d2;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Inter, sans-serif;
+      }
+
+      .wrap {
+        max-width: 860px;
+        margin: auto;
+        padding: 28px 22px 70px;
+      }
+
+      .rule {
+        border: 0;
+        border-top: 1px dashed var(--line);
+        margin: 32px 0;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 15px;
+      }
+
+      .brand { font-weight: 600; }
+
+      .nav { display: flex; gap: 18px; }
+
+      .nav a { text-decoration: none; color: var(--text); }
+
+      .hero {
+        text-align: center;
+        padding: 70px 0 28px;
+      }
+
+      .eyebrow {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 13px;
+        color: var(--muted);
+        margin-bottom: 12px;
+      }
+
+      h1 {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: clamp(34px, 6vw, 56px);
+        font-weight: 500;
+        line-height: 1.1;
+        margin: 0 0 16px;
+      }
+
+      .subtext {
+        max-width: 600px;
+        margin: auto;
+        font-size: 18px;
+        line-height: 1.6;
+        color: var(--muted);
+      }
+
+      .hero-link {
+        margin-top: 20px;
+        display: inline-block;
+        font-family: 'IBM Plex Mono', monospace;
+        text-decoration: none;
+        color: var(--text);
+        border-bottom: 1px solid var(--text);
+        padding-bottom: 2px;
+      }
+
+      .section-label {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 15px;
+        color: var(--muted);
+        margin-bottom: 14px;
+      }
+
+      ul { list-style: none; padding: 0; margin: 0; }
+
+      .bullets li {
+        font-size: 20px;
+        margin-bottom: 10px;
+      }
+
+      .bullets li::before { content: "- "; color: var(--muted); }
+
+      .copy {
+        font-size: 19px;
+        line-height: 1.65;
+        max-width: 700px;
+      }
+
+      .steps li {
+        font-size: 20px;
+        margin-bottom: 8px;
+      }
+
+      /* TAB COMMANDS */
+
+      .tabs {
+        font-family: 'IBM Plex Mono', monospace;
+        margin-bottom: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .tab {
+        cursor: pointer;
+        color: var(--muted);
+        position: relative;
+      }
+
+      /* active command uses classic deep blue like old Windows terminal */
+      .tab.active {
+        color: #0037DA;
+      }
+
+      .tab::before {
+        content: "$ ";
+      }
+
+      /* blinking terminal cursor for premium feel */
+      .tab.active::after {
+        content: " _";
+        animation: cursorblink 1.1s steps(1) infinite;
+      }
+
+      @keyframes cursorblink {
+        0% { opacity: 1; }
+        50% { opacity: 0; }
+        100% { opacity: 1; }
+      }
+
+      .tab-output {
+        margin-top: 10px;
+        font-size: 19px;
+        line-height: 1.65;
+      }
+
+      .cli {
+        font-family: 'IBM Plex Mono', monospace;
+        color: #555;
+        margin-top: 14px;
+        font-family: 'IBM Plex Mono', monospace;
+        color: #555;
+        margin-top: 14px;
+      }
+
+      footer {
+        text-align: center;
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 14px;
+      }
+
+      footer a { margin: 0 10px; text-decoration: none; color: var(--text); }
+
+      @media (max-width: 700px) {
+        .hero { text-align: left; padding-top: 50px; }
+        .subtext { margin: 0; }
+      }
+
+    </style>
+  </head>
+
+  <body>
+
+    <div class="wrap">
+
+      <header class="topbar">
+        <div class="brand">sydes</div>
+        <nav class="nav">
+          <a href="#docs">docs</a>
+          <a href="#github">github</a>
+          <a href="#contact">contact</a>
+        </nav>
+      </header>
+
+      <section class="hero">
+        <div class="eyebrow">AI system understanding</div>
+
+        <h1>Understand complex systems directly from code.</h1>
+
+        <p class="subtext">
+          Sydes analyzes codebases to reconstruct architecture,
+          dependencies, and system flows — enabling engineers to
+          understand how software systems actually work.
+        </p>
+
+        <a class="hero-link" href="#docs">View CLI docs →</a>
+      </section>
+
+      <hr class="rule" />
+
+      <section>
+
+        <div class="section-label">/* what sydes does */</div>
+
+        <ul class="bullets">
+          <li>maps routes, services, and dependencies</li>
+          <li>reconstructs backend system architecture</li>
+          <li>answers questions about system behavior</li>
+        </ul>
+
+      </section>
+
+      <hr class="rule" />
+
+      <section>
+
+        <div class="section-label">/* why this is needed */</div>
+
+        <div class="copy">
+          Modern software systems are complex networks of APIs,
+          background workers, queues, and databases. Understanding
+          them usually requires reading thousands of files and relying
+          on tribal knowledge from engineers who built the system.
+
+          Sydes reconstructs the structural picture directly from code
+          so it can be explored and reasoned about.
+        </div>
+
+      </section>
+
+      <hr class="rule" />
+
+      <section>
+
+        <div class="section-label">/* how it works */</div>
+
+        <ul class="steps">
+          <li>1. parse the codebase</li>
+          <li>2. build a system graph</li>
+          <li>3. run AI reasoning on top</li>
+        </ul>
+
+      </section>
+
+      <hr class="rule" />
+
+      <section>
+
+        <div class="section-label">/* capabilities */</div>
+
+        <div class="tabs">
+          <div class="tab active" data-tab="incident">sydes incident</div>
+          <div class="tab" data-tab="architecture">sydes architecture</div>
+          <div class="tab" data-tab="tests">sydes tests</div>
+        </div>
+
+        <div class="tab-output" id="output"></div>
+
+      </section>
+
+      <hr class="rule" />
+
+      <section id="contact" style="text-align:center">
+
+        <div class="section-label">ready to try?</div>
+
+        <p style="font-size:18px;color:#555">
+          Sydes is currently CLI‑first.
+        </p>
+
+        <a class="hero-link" href="#docs">Get started →</a>
+
+      </section>
+
+      <hr class="rule" />
+
+      <footer>
+        <a href="#github">github</a>
+        <a href="#docs">docs</a>
+        <a href="#contact">contact</a>
+        <div style="margin-top:12px;color:#777">© 2026 sydes</div>
+      </footer>
+
+    </div>
+
+
+<script>
+
+const outputs = {
+
+incident: `
+<strong>Incident Investigation</strong>
+<p>Reconstruct what happened during system failures. Sydes analyzes logs, traces, and code context to identify root causes and failure propagation.</p>
+<div class="cli">
+$ sydes investigate incident/<br>
+→ traced request across 9 services<br>
+→ root cause: payment-worker retry loop
+</div>
+`,
+
+architecture: `
+<strong>System Architecture</strong>
+<p>Analyze a codebase and rebuild the backend architecture automatically including services, routes, and dependencies.</p>
+<div class="cli">
+$ sydes graph ./repo<br>
+→ 38 services detected<br>
+→ 211 API routes<br>
+→ 94 service dependencies
+</div>
+`,
+
+tests: `
+<strong>Integration Tests</strong>
+<p>Generate tests based on real system flows so service interactions are verified automatically.</p>
+<div class="cli">
+$ sydes generate tests<br>
+→ 42 integration tests created
+</div>
+`
+
+};
+
+const tabs = document.querySelectorAll('.tab');
+const output = document.getElementById('output');
+
+function setTab(name){
+  output.innerHTML = outputs[name];
+  tabs.forEach(t => t.classList.remove('active'));
+  document.querySelector(`[data-tab="${name}"]`).classList.add('active');
+}
+
+setTab('incident');
+
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    setTab(tab.dataset.tab);
+  });
+});
+
+</script>
+
+
+  </body>
+</html>
