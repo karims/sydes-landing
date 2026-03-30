@@ -166,13 +166,40 @@
         line-height: 1.65;
       }
 
+      .terminal {
+        margin-top: 16px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        overflow: hidden;
+        background: rgba(255,255,255,0.45);
+      }
+
+      .terminal-bar {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--line);
+        background: rgba(0,0,0,0.03);
+      }
+
+      .terminal-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #b9b9b2;
+      }
+
+      .terminal-body {
+        padding: 16px 18px 18px;
+      }
+
       .cli {
         font-family: 'IBM Plex Mono', monospace;
-        color: #555;
+        font-size: 0.7em;
+        color: #222;
         margin-top: 14px;
-        font-family: 'IBM Plex Mono', monospace;
-        color: #555;
-        margin-top: 14px;
+        white-space: normal;
       }
 
       footer {
@@ -278,10 +305,6 @@
 
         <div class="tab-output" id="output"></div>
 
-        <p style="font-size:15px;color:#5a5a5a;margin-top:18px">
-          Available now: <span style="font-family:'IBM Plex Mono', monospace">sydes incident</span> for log-based incident analysis.
-        </p>
-
       </section>
 
       <hr class="rule" />
@@ -317,12 +340,21 @@ const outputs = {
 incident: `
 <strong>Incident Investigation</strong>
 <p>Reconstruct what happened during system failures. Sydes analyzes logs, traces, and code context to identify root causes and failure propagation.</p>
+<div class="terminal">
+<div class="terminal-bar">
+<span class="terminal-dot"></span>
+<span class="terminal-dot"></span>
+<span class="terminal-dot"></span>
+</div>
+<div class="terminal-body">
 <div class="cli">
 $ sydes incident analyze \<br>
 &nbsp;&nbsp;--model openai:gpt-4.1-mini \<br>
 &nbsp;&nbsp;--require-model \<br>
 &nbsp;&nbsp;--query "Why is checkout returning 503 errors?" \<br>
 &nbsp;&nbsp;logs/incident.log<br>
+<br>
+...<br>
 <br>
 == INCIDENT SUMMARY ==<br>
 API Gateway timeouts to db-proxy causing 503 errors on checkout requests<br>
@@ -339,25 +371,23 @@ The API Gateway service is experiencing repeated HTTP 503 errors for checkout en
 <br>
 ...
 </div>
+</div>
+</div>
 `,
 
 architecture: `
 <strong>System Architecture</strong>
-<p>Analyze a codebase and rebuild the backend architecture automatically including services, routes, and dependencies.</p>
+<p>Coming soon. Sydes will analyze codebases to reconstruct backend architecture, services, routes, and dependencies.</p>
 <div class="cli">
-$ sydes graph ./repo<br>
-→ 38 services detected<br>
-→ 211 API routes<br>
-→ 94 service dependencies
+coming soon
 </div>
 `,
 
 tests: `
 <strong>Integration Tests</strong>
-<p>Generate tests based on real system flows so service interactions are verified automatically.</p>
+<p>Coming soon. Sydes will generate tests from real system behavior so critical interactions can be verified automatically.</p>
 <div class="cli">
-$ sydes generate tests<br>
-→ 42 integration tests created
+coming soon
 </div>
 `
 
