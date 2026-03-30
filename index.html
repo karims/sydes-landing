@@ -205,17 +205,24 @@
       </header>
 
       <section class="hero">
-        <div class="eyebrow">AI system understanding</div>
+        <div class="eyebrow">CLI-first incident analysis</div>
 
-        <h1>Understand complex systems directly from code.</h1>
+        <h1>Understand production incidents from logs in seconds.</h1>
 
         <p class="subtext">
-          Sydes analyzes codebases to reconstruct architecture,
-          dependencies, and system flows — enabling engineers to
-          understand how software systems actually work.
+          Sydes analyzes raw logs and generates a structured root-cause
+          hypothesis, timeline, and evidence - without manually scanning
+          thousands of lines.
         </p>
 
-        <a class="hero-link" href="#docs">View CLI docs →</a>
+        <a class="hero-link" href="https://docs.sydes.io">View docs →</a>
+
+        <div class="cli">
+          $ sydes incident analyze logs/*.log \<br>
+          &nbsp;&nbsp;--query "Why is checkout returning 503 errors?"<br>
+          <br>
+          → API Gateway timeouts to db-proxy causing 503 errors on checkout requests
+        </div>
       </section>
 
       <hr class="rule" />
@@ -225,9 +232,10 @@
         <div class="section-label">/* what sydes does */</div>
 
         <ul class="bullets">
-          <li>maps routes, services, and dependencies</li>
-          <li>reconstructs backend system architecture</li>
-          <li>answers questions about system behavior</li>
+          <li>turns raw logs into structured events</li>
+          <li>groups related failure signals</li>
+          <li>builds a timeline of what happened</li>
+          <li>generates an evidence-backed root-cause hypothesis</li>
         </ul>
 
       </section>
@@ -239,13 +247,12 @@
         <div class="section-label">/* why this is needed */</div>
 
         <div class="copy">
-          Modern software systems are complex networks of APIs,
-          background workers, queues, and databases. Understanding
-          them usually requires reading thousands of files and relying
-          on tribal knowledge from engineers who built the system.
+          When incidents happen, engineers are forced to scan thousands
+          of log lines across multiple services, hosts, and timestamps.
+          The problem is not lack of data - it is lack of structure.
 
-          Sydes reconstructs the structural picture directly from code
-          so it can be explored and reasoned about.
+          Sydes reconstructs what happened from logs so failures can be
+          investigated as evidence, not line-by-line text.
         </div>
 
       </section>
@@ -257,9 +264,9 @@
         <div class="section-label">/* how it works */</div>
 
         <ul class="steps">
-          <li>1. parse the codebase</li>
-          <li>2. build a system graph</li>
-          <li>3. run AI reasoning on top</li>
+          <li>1. parse and interpret raw logs</li>
+          <li>2. group related signals into events and clusters</li>
+          <li>3. build a timeline and generate a root-cause hypothesis</li>
         </ul>
 
       </section>
@@ -278,19 +285,23 @@
 
         <div class="tab-output" id="output"></div>
 
+        <p style="font-size:15px;color:#5a5a5a;margin-top:18px">
+          Incident analysis is the first Sydes capability. Architecture understanding and test generation are coming next.
+        </p>
+
       </section>
 
       <hr class="rule" />
 
       <section id="contact" style="text-align:center">
 
-        <div class="section-label">ready to try?</div>
+        <div class="section-label">ready to investigate?</div>
 
         <p style="font-size:18px;color:#555">
-          Sydes is currently CLI‑first.
+          Sydes is currently CLI-first.
         </p>
 
-        <a class="hero-link" href="#docs">Get started →</a>
+        <a class="hero-link" href="https://docs.sydes.io">Get started →</a>
 
       </section>
 
@@ -311,18 +322,21 @@
 const outputs = {
 
 incident: `
-<strong>Incident Investigation</strong>
-<p>Reconstruct what happened during system failures. Sydes analyzes logs, traces, and code context to identify root causes and failure propagation.</p>
+<strong>Incident Analysis</strong>
+<p>Investigate suspected issues in logs using structured evidence, timelines, and AI-assisted reasoning.</p>
 <div class="cli">
-$ sydes investigate incident/<br>
-→ traced request across 9 services<br>
-→ root cause: payment-worker retry loop
+$ sydes incident analyze logs/*.log \<br>
+&nbsp;&nbsp;--query "Why are session lookups failing?" \<br>
+&nbsp;&nbsp;--grep "session lookup failed"<br>
+<br>
+→ cache_unavailable causing session lookup failures in auth-service
 </div>
+<div class="eyebrow" style="margin-top:12px">Best results usually come from: query + grep</div>
 `,
 
 architecture: `
-<strong>System Architecture</strong>
-<p>Analyze a codebase and rebuild the backend architecture automatically including services, routes, and dependencies.</p>
+<strong>Architecture Understanding</strong>
+<p>Coming next: analyze a codebase and rebuild backend architecture, services, routes, and dependencies.</p>
 <div class="cli">
 $ sydes graph ./repo<br>
 → 38 services detected<br>
@@ -332,8 +346,8 @@ $ sydes graph ./repo<br>
 `,
 
 tests: `
-<strong>Integration Tests</strong>
-<p>Generate tests based on real system flows so service interactions are verified automatically.</p>
+<strong>Test Generation</strong>
+<p>Coming next: generate tests from reconstructed system behavior so critical interactions can be verified automatically.</p>
 <div class="cli">
 $ sydes generate tests<br>
 → 42 integration tests created
