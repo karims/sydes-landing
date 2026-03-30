@@ -207,7 +207,7 @@
       <section class="hero">
         <div class="eyebrow">AI system understanding</div>
 
-        <h1>Understand complex systems directly from code.</h1>
+        <h1>Understand complex software systems directly from code.</h1>
 
         <p class="subtext">
           Sydes analyzes codebases to reconstruct architecture,
@@ -278,6 +278,10 @@
 
         <div class="tab-output" id="output"></div>
 
+        <p style="font-size:15px;color:#5a5a5a;margin-top:18px">
+          Available now: <span style="font-family:'IBM Plex Mono', monospace">sydes incident</span> for log-based incident analysis.
+        </p>
+
       </section>
 
       <hr class="rule" />
@@ -314,9 +318,26 @@ incident: `
 <strong>Incident Investigation</strong>
 <p>Reconstruct what happened during system failures. Sydes analyzes logs, traces, and code context to identify root causes and failure propagation.</p>
 <div class="cli">
-$ sydes investigate incident/<br>
-→ traced request across 9 services<br>
-→ root cause: payment-worker retry loop
+$ sydes incident analyze \<br>
+&nbsp;&nbsp;--model openai:gpt-4.1-mini \<br>
+&nbsp;&nbsp;--require-model \<br>
+&nbsp;&nbsp;--query "Why is checkout returning 503 errors?" \<br>
+&nbsp;&nbsp;logs/incident.log<br>
+<br>
+== INCIDENT SUMMARY ==<br>
+API Gateway timeouts to db-proxy causing 503 errors on checkout requests<br>
+<br>
+== INCIDENT WINDOW ==<br>
+Mode: exact<br>
+Start: 2026-03-25T13:34:05+00:00<br>
+End: 2026-03-25T13:34:05+00:00<br>
+Timeline events: 1<br>
+<br>
+== TOP HYPOTHESIS ==<br>
+API Gateway timeouts to db-proxy causing 503 errors on checkout requests<br>
+The API Gateway service is experiencing repeated HTTP 503 errors for checkout endpoints...<br>
+<br>
+...
 </div>
 `,
 
