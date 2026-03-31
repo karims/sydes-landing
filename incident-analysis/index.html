@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sydes Incident Analysis</title>
+    <meta name="description" content="CLI-first incident analysis from logs. Sydes reconstructs timelines, root-cause hypotheses, and evidence from raw production logs." />
+    <meta property="og:title" content="Sydes Incident Analysis" />
+    <meta property="og:description" content="Understand production incidents from logs in seconds." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://sydes.io/incident-analysis" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <style>
+      :root {
+        --bg: #f6f6f3;
+        --text: #111;
+        --muted: #5a5a5a;
+        --line: #d7d7d2;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Inter, sans-serif;
+      }
+
+      .wrap {
+        max-width: 860px;
+        margin: auto;
+        padding: 28px 22px 70px;
+      }
+
+      .rule {
+        border: 0;
+        border-top: 1px dashed var(--line);
+        margin: 32px 0;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 15px;
+      }
+
+      .brand {
+        font-weight: 600;
+        text-decoration: none;
+        color: var(--text);
+      }
+
+      .nav {
+        display: flex;
+        gap: 18px;
+      }
+
+      .nav a {
+        text-decoration: none;
+        color: var(--text);
+      }
+
+      .hero {
+        text-align: center;
+        padding: 70px 0 28px;
+      }
+
+      .eyebrow {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 13px;
+        color: var(--muted);
+        margin-bottom: 12px;
+      }
+
+      h1 {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: clamp(34px, 6vw, 56px);
+        font-weight: 500;
+        line-height: 1.1;
+        margin: 0 0 16px;
+      }
+
+      .subtext {
+        max-width: 640px;
+        margin: auto;
+        font-size: 18px;
+        line-height: 1.6;
+        color: var(--muted);
+      }
+
+      .hero-actions {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 18px;
+        flex-wrap: wrap;
+      }
+
+      .hero-link {
+        display: inline-block;
+        font-family: 'IBM Plex Mono', monospace;
+        text-decoration: none;
+        color: var(--text);
+        border-bottom: 1px solid var(--text);
+        padding-bottom: 2px;
+      }
+
+      .section-label {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 15px;
+        color: var(--muted);
+        margin-bottom: 14px;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .bullets li {
+        font-size: 20px;
+        margin-bottom: 10px;
+      }
+
+      .bullets li::before {
+        content: "- ";
+        color: var(--muted);
+      }
+
+      .copy {
+        font-size: 19px;
+        line-height: 1.65;
+        max-width: 700px;
+      }
+
+      .steps li {
+        font-size: 20px;
+        margin-bottom: 8px;
+      }
+
+      .terminal {
+        margin-top: 20px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        overflow: hidden;
+        background: rgba(255,255,255,0.45);
+      }
+
+      .hero .terminal {
+        max-width: 720px;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: left;
+      }
+
+      .terminal-bar {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--line);
+        background: rgba(0,0,0,0.03);
+      }
+
+      .terminal-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #b9b9b2;
+      }
+
+      .terminal-body {
+        padding: 16px 18px 18px;
+      }
+
+      .cli {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 0.7em;
+        color: #222;
+        line-height: 1.65;
+        white-space: normal;
+      }
+
+      .note {
+        font-size: 15px;
+        color: var(--muted);
+      }
+
+      footer {
+        text-align: center;
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 14px;
+      }
+
+      footer a {
+        margin: 0 10px;
+        text-decoration: none;
+        color: var(--text);
+      }
+
+      @media (max-width: 700px) {
+        .hero {
+          text-align: left;
+          padding-top: 50px;
+        }
+
+        .subtext {
+          margin: 0;
+        }
+
+        .hero-actions {
+          justify-content: flex-start;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrap">
+      <header class="topbar">
+        <a class="brand" href="/">sydes</a>
+        <nav class="nav">
+          <a href="/">home</a>
+          <a href="https://docs.sydes.io">docs</a>
+          <a href="https://github.com/sydes-ai">github</a>
+          <a href="mailto:hello@sydes.io">contact</a>
+        </nav>
+      </header>
+
+      <section class="hero">
+        <div class="eyebrow">CLI-first incident analysis</div>
+
+        <h1>Understand production incidents from logs in seconds</h1>
+
+        <p class="subtext">
+          Sydes analyzes raw logs and generates a structured root-cause
+          hypothesis, timeline, and evidence - without manually scanning
+          thousands of lines.
+        </p>
+
+        <div class="hero-actions">
+          <a class="hero-link" href="https://github.com/sydes-ai">Get started →</a>
+          <a class="hero-link" href="https://docs.sydes.io">View docs →</a>
+        </div>
+
+        <div class="terminal">
+          <div class="terminal-bar">
+            <span class="terminal-dot"></span>
+            <span class="terminal-dot"></span>
+            <span class="terminal-dot"></span>
+          </div>
+          <div class="terminal-body">
+            <div class="cli">
+              $ sydes incident analyze logs/*.log \<br>
+              &nbsp;&nbsp;--query "Why is checkout returning 503 errors?"<br>
+              <br>
+              → API Gateway timeouts to db-proxy causing 503 errors on checkout requests
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="rule" />
+
+      <section>
+        <div class="section-label">/* what incident analysis does */</div>
+
+        <ul class="bullets">
+          <li>reconstructs incident timelines from logs</li>
+          <li>identifies likely root causes</li>
+          <li>surfaces supporting evidence</li>
+          <li>connects failure signals across services</li>
+        </ul>
+      </section>
+
+      <hr class="rule" />
+
+      <section>
+        <div class="section-label">/* get started */</div>
+
+        <div class="terminal">
+          <div class="terminal-bar">
+            <span class="terminal-dot"></span>
+            <span class="terminal-dot"></span>
+            <span class="terminal-dot"></span>
+          </div>
+          <div class="terminal-body">
+            <div class="cli">
+              pip install sydes<br>
+              <br>
+              sydes incident analyze logs/*.log \<br>
+              &nbsp;&nbsp;--query "Why are session lookups failing?"
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="rule" />
+
+      <section>
+        <div class="section-label">/* example output */</div>
+
+        <div class="terminal">
+          <div class="terminal-bar">
+            <span class="terminal-dot"></span>
+            <span class="terminal-dot"></span>
+            <span class="terminal-dot"></span>
+          </div>
+          <div class="terminal-body">
+            <div class="cli">
+              ...<br>
+              <br>
+              == INCIDENT SUMMARY ==<br>
+              API Gateway timeouts to db-proxy causing 503 errors on checkout requests<br>
+              <br>
+              == INCIDENT WINDOW ==<br>
+              Mode: exact<br>
+              Start: 2026-03-25T13:34:05+00:00<br>
+              End: 2026-03-25T13:34:05+00:00<br>
+              Timeline events: 1<br>
+              <br>
+              == TOP HYPOTHESIS ==<br>
+              API Gateway timeouts to db-proxy causing 503 errors on checkout requests<br>
+              The API Gateway service is experiencing repeated HTTP 503 errors for checkout endpoints...<br>
+              <br>
+              ...
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="rule" />
+
+      <section>
+        <div class="section-label">/* why this is useful */</div>
+
+        <div class="copy">
+          When incidents happen, engineers are forced to scan thousands
+          of lines across multiple services, hosts, and timestamps. The
+          problem is not lack of data - it is lack of structure.
+
+          Sydes reconstructs what happened from logs so failures can be
+          investigated as evidence, not raw text.
+        </div>
+      </section>
+
+      <hr class="rule" />
+
+      <section>
+        <div class="section-label">/* how it works */</div>
+
+        <ul class="steps">
+          <li>1. parse and interpret raw logs</li>
+          <li>2. group related failure signals into events and clusters</li>
+          <li>3. build a timeline and generate a root-cause hypothesis</li>
+        </ul>
+      </section>
+
+      <hr class="rule" />
+
+      <section>
+        <div class="section-label">/* query vs grep */</div>
+
+        <ul class="bullets">
+          <li><span style="font-family:'IBM Plex Mono', monospace">--grep</span> filters logs by exact patterns</li>
+          <li><span style="font-family:'IBM Plex Mono', monospace">--query</span> lets you investigate a suspected issue in plain English</li>
+          <li>best results usually come from combining both</li>
+        </ul>
+
+        <div class="terminal">
+          <div class="terminal-bar">
+            <span class="terminal-dot"></span>
+            <span class="terminal-dot"></span>
+            <span class="terminal-dot"></span>
+          </div>
+          <div class="terminal-body">
+            <div class="cli">
+              $ sydes incident analyze logs/*.log \<br>
+              &nbsp;&nbsp;--query "Why are session lookups failing?" \<br>
+              &nbsp;&nbsp;--grep "session lookup failed"<br>
+              <br>
+              → cache_unavailable causing session lookup failures in auth-service
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="rule" />
+
+      <section style="text-align:center">
+        <div class="section-label">incident analysis is the first Sydes capability.</div>
+
+        <p class="note">
+          Architecture understanding and test workflows are coming next.
+        </p>
+
+        <a class="hero-link" href="/">Learn more about Sydes →</a>
+      </section>
+
+      <hr class="rule" />
+
+      <footer>
+        <a href="/">home</a>
+        <a href="https://github.com/sydes-ai">github</a>
+        <a href="https://docs.sydes.io">docs</a>
+        <a href="mailto:hello@sydes.io">contact</a>
+        <div style="margin-top:12px;color:#777">© 2026 sydes</div>
+      </footer>
+    </div>
+
+    <script defer src="/_vercel/insights/script.js"></script>
+  </body>
+</html>
