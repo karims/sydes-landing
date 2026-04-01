@@ -33,15 +33,15 @@
       }
 
       .wrap {
-        max-width: 860px;
+        max-width: 780px;
         margin: auto;
-        padding: 28px 22px 70px;
+        padding: 28px 24px 88px;
       }
 
       .rule {
         border: 0;
         border-top: 1px dashed var(--line);
-        margin: 32px 0;
+        margin: 52px 0;
       }
 
       .topbar {
@@ -70,38 +70,33 @@
 
       .hero {
         text-align: center;
-        padding: 70px 0 28px;
+        padding: 76px 0 8px;
       }
 
       .eyebrow {
         font-family: 'IBM Plex Mono', monospace;
-        font-size: 13px;
+        font-size: 12px;
+        letter-spacing: 0.02em;
         color: var(--muted);
-        margin-bottom: 12px;
+        margin-bottom: 14px;
       }
 
       h1 {
         font-family: 'IBM Plex Mono', monospace;
-        font-size: clamp(34px, 6vw, 56px);
+        font-size: clamp(34px, 5vw, 48px);
         font-weight: 500;
-        line-height: 1.1;
-        margin: 0 0 16px;
+        letter-spacing: -0.03em;
+        line-height: 1.02;
+        margin: 0 auto 14px;
+        max-width: 11ch;
       }
 
       .subtext {
-        max-width: 640px;
+        max-width: 430px;
         margin: auto;
-        font-size: 18px;
-        line-height: 1.6;
+        font-size: 15px;
+        line-height: 1.4;
         color: var(--muted);
-      }
-
-      .hero-actions {
-        margin-top: 20px;
-        display: flex;
-        justify-content: center;
-        gap: 18px;
-        flex-wrap: wrap;
       }
 
       .hero-link {
@@ -115,9 +110,10 @@
 
       .section-label {
         font-family: 'IBM Plex Mono', monospace;
-        font-size: 15px;
+        font-size: 12px;
+        letter-spacing: 0.01em;
         color: var(--muted);
-        margin-bottom: 14px;
+        margin-bottom: 12px;
       }
 
       ul {
@@ -150,25 +146,18 @@
       }
 
       .terminal {
-        margin-top: 20px;
+        margin-top: 10px;
         border: 1px solid var(--line);
         border-radius: 12px;
         overflow: hidden;
         background: rgba(255,255,255,0.45);
       }
 
-      .hero .terminal {
-        max-width: 720px;
-        margin-left: auto;
-        margin-right: auto;
-        text-align: left;
-      }
-
       .terminal-bar {
         display: flex;
         align-items: center;
         gap: 6px;
-        padding: 10px 12px;
+        padding: 9px 12px;
         border-bottom: 1px solid var(--line);
         background: rgba(0,0,0,0.03);
       }
@@ -181,20 +170,47 @@
       }
 
       .terminal-body {
-        padding: 16px 18px 18px;
+        padding: 15px 18px 16px;
       }
 
       .cli {
         font-family: 'IBM Plex Mono', monospace;
-        font-size: 0.7em;
+        font-size: 13px;
         color: #222;
-        line-height: 1.65;
+        line-height: 1.6;
         white-space: normal;
       }
 
       .note {
-        font-size: 15px;
+        font-size: 13px;
+        line-height: 1.45;
         color: var(--muted);
+        max-width: 460px;
+        margin: 0 auto 14px;
+      }
+
+      .install .terminal {
+        max-width: 280px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .install .terminal-body {
+        padding: 12px 16px 13px;
+      }
+
+      .install .cli {
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .command-example {
+        max-width: 720px;
+        margin: 0 auto;
+      }
+
+      .command-example .section-label {
+        margin-bottom: 10px;
       }
 
       footer {
@@ -212,15 +228,20 @@
       @media (max-width: 700px) {
         .hero {
           text-align: left;
-          padding-top: 50px;
+          padding-top: 52px;
         }
 
         .subtext {
           margin: 0;
         }
 
-        .hero-actions {
-          justify-content: flex-start;
+        h1 {
+          max-width: none;
+        }
+
+        .install .terminal,
+        .command-example {
+          max-width: none;
         }
       }
     </style>
@@ -250,7 +271,7 @@
 
       <hr class="rule" />
 
-      <section>
+      <section class="install">
         <div class="terminal">
           <div class="terminal-bar">
             <span class="terminal-dot"></span>
@@ -267,7 +288,7 @@
 
       <hr class="rule" />
 
-      <section>
+      <section class="command-example">
         <div class="section-label">/* query + grep */</div>
 
         <div class="terminal">
@@ -290,7 +311,7 @@
 
       <hr class="rule" />
 
-      <section>
+      <section class="command-example">
         <div class="section-label">/* multiple service logs */</div>
 
         <div class="terminal">
@@ -312,7 +333,7 @@
 
       <hr class="rule" />
 
-      <section>
+      <section class="command-example">
         <div class="section-label">/* timeline window */</div>
 
         <div class="terminal">
