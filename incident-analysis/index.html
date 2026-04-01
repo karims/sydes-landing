@@ -241,18 +241,16 @@
       <section class="hero">
         <div class="eyebrow">CLI-first incident analysis</div>
 
-        <h1>Understand production incidents from logs in seconds</h1>
+        <h1>Understand production incidents from logs</h1>
 
         <p class="subtext">
-          Sydes analyzes raw logs and generates a structured root-cause
-          hypothesis, timeline, and evidence - without manually scanning
-          thousands of lines.
+          Turn raw logs into timelines, hypotheses, and evidence.
         </p>
+      </section>
 
-        <div class="hero-actions">
-          <a class="hero-link" href="https://github.com/sydes-ai/ai-autopsy/">Get started →</a>
-        </div>
+      <hr class="rule" />
 
+      <section>
         <div class="terminal">
           <div class="terminal-bar">
             <span class="terminal-dot"></span>
@@ -261,10 +259,7 @@
           </div>
           <div class="terminal-body">
             <div class="cli">
-              $ sydes incident analyze logs/*.log \<br>
-              &nbsp;&nbsp;--query "Why is checkout returning 503 errors?"<br>
-              <br>
-              → API Gateway timeouts to db-proxy causing 503 errors on checkout requests
+              pip install sydes
             </div>
           </div>
         </div>
@@ -273,20 +268,7 @@
       <hr class="rule" />
 
       <section>
-        <div class="section-label">/* what incident analysis does */</div>
-
-        <ul class="bullets">
-          <li>reconstructs incident timelines from logs</li>
-          <li>identifies likely root causes</li>
-          <li>surfaces supporting evidence</li>
-          <li>connects failure signals across services</li>
-        </ul>
-      </section>
-
-      <hr class="rule" />
-
-      <section>
-        <div class="section-label">/* get started */</div>
+        <div class="section-label">/* query + grep */</div>
 
         <div class="terminal">
           <div class="terminal-bar">
@@ -296,10 +278,11 @@
           </div>
           <div class="terminal-body">
             <div class="cli">
-              pip install sydes<br>
-              <br>
               sydes incident analyze logs/*.log \<br>
-              &nbsp;&nbsp;--query "Why is checkout returning 503 errors?"
+              &nbsp;&nbsp;--query "why are checkout requests failing?" \<br>
+              &nbsp;&nbsp;--grep "503"<br>
+              <br>
+              → api-gateway → db-proxy timeouts causing checkout 503s
             </div>
           </div>
         </div>
@@ -308,7 +291,7 @@
       <hr class="rule" />
 
       <section>
-        <div class="section-label">/* example output */</div>
+        <div class="section-label">/* multiple service logs */</div>
 
         <div class="terminal">
           <div class="terminal-bar">
@@ -318,22 +301,10 @@
           </div>
           <div class="terminal-body">
             <div class="cli">
-              ...<br>
+              sydes incident analyze logs/api/*.log logs/auth/*.log logs/db/*.log \<br>
+              &nbsp;&nbsp;--query "why are session lookups failing?"<br>
               <br>
-              == INCIDENT SUMMARY ==<br>
-              API Gateway timeouts to db-proxy causing 503 errors on checkout requests<br>
-              <br>
-              == INCIDENT WINDOW ==<br>
-              Mode: exact<br>
-              Start: 2026-03-25T13:34:05+00:00<br>
-              End: 2026-03-25T13:34:05+00:00<br>
-              Timeline events: 1<br>
-              <br>
-              == TOP HYPOTHESIS ==<br>
-              API Gateway timeouts to db-proxy causing 503 errors on checkout requests<br>
-              The API Gateway service is experiencing repeated HTTP 503 errors for checkout endpoints...<br>
-              <br>
-              ...
+              → cache_unavailable in auth-service causing cross-service session failures
             </div>
           </div>
         </div>
@@ -342,40 +313,7 @@
       <hr class="rule" />
 
       <section>
-        <div class="section-label">/* why this is useful */</div>
-
-        <div class="copy">
-          When incidents happen, engineers are forced to scan thousands
-          of lines across multiple services, hosts, and timestamps. The
-          problem is not lack of data - it is lack of structure.
-
-          Sydes reconstructs what happened from logs so failures can be
-          investigated as evidence, not raw text.
-        </div>
-      </section>
-
-      <hr class="rule" />
-
-      <section>
-        <div class="section-label">/* how it works */</div>
-
-        <ul class="steps">
-          <li>1. parse and interpret raw logs</li>
-          <li>2. group related failure signals into events and clusters</li>
-          <li>3. build a timeline and generate a root-cause hypothesis</li>
-        </ul>
-      </section>
-
-      <hr class="rule" />
-
-      <section>
-        <div class="section-label">/* query vs grep */</div>
-
-        <ul class="bullets">
-          <li><span style="font-family:'IBM Plex Mono', monospace">--grep</span> filters logs by exact patterns</li>
-          <li><span style="font-family:'IBM Plex Mono', monospace">--query</span> lets you investigate a suspected issue in plain English</li>
-          <li>best results usually come from combining both</li>
-        </ul>
+        <div class="section-label">/* timeline window */</div>
 
         <div class="terminal">
           <div class="terminal-bar">
@@ -385,11 +323,13 @@
           </div>
           <div class="terminal-body">
             <div class="cli">
-              $ sydes incident analyze logs/*.log \<br>
-              &nbsp;&nbsp;--query "Why are session lookups failing?" \<br>
-              &nbsp;&nbsp;--grep "session lookup failed"<br>
+              sydes incident analyze logs/*.log \<br>
+              &nbsp;&nbsp;--from "2026-03-25T13:34:00" \<br>
+              &nbsp;&nbsp;--to "2026-03-25T13:35:00"<br>
               <br>
-              → cache_unavailable causing session lookup failures in auth-service
+              13:34:05 → latency spike (api-gateway)<br>
+              13:34:12 → db connections exhausted<br>
+              13:34:15 → 503 surge
             </div>
           </div>
         </div>
