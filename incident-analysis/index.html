@@ -148,37 +148,69 @@
       .terminal {
         margin-top: 10px;
         border: 1px solid var(--line);
-        border-radius: 12px;
+        border-radius: 7px;
         overflow: hidden;
-        background: rgba(255,255,255,0.45);
+        background: rgba(255,255,255,0.72);
       }
 
       .terminal-bar {
         display: flex;
         align-items: center;
         gap: 6px;
-        padding: 9px 12px;
+        padding: 7px 10px;
         border-bottom: 1px solid var(--line);
-        background: rgba(0,0,0,0.03);
+        background: rgba(0,0,0,0.015);
       }
 
       .terminal-dot {
-        width: 8px;
-        height: 8px;
+        width: 6px;
+        height: 6px;
         border-radius: 50%;
-        background: #b9b9b2;
+        background: #c3c3bb;
       }
 
       .terminal-body {
-        padding: 15px 18px 16px;
+        padding: 15px 16px 16px;
       }
 
       .cli {
         font-family: 'IBM Plex Mono', monospace;
         font-size: 13px;
-        color: #222;
-        line-height: 1.6;
+        color: #161616;
+        line-height: 1.58;
         white-space: normal;
+      }
+
+      .cmd-line {
+        color: #111;
+      }
+
+      .prompt {
+        color: #6a6a63;
+      }
+
+      .flag {
+        color: #303030;
+      }
+
+      .arg {
+        color: #555;
+      }
+
+      .result {
+        display: block;
+        margin-top: 2px;
+        color: #2d2d2d;
+      }
+
+      .timeline-row {
+        display: grid;
+        grid-template-columns: 72px 1fr;
+        gap: 12px;
+      }
+
+      .timeline-time {
+        color: #4f4f49;
       }
 
       .note {
@@ -280,7 +312,7 @@
           </div>
           <div class="terminal-body">
             <div class="cli">
-              pip install sydes
+              <span class="cmd-line"><span class="prompt">$</span> pip install sydes</span>
             </div>
           </div>
         </div>
@@ -299,11 +331,11 @@
           </div>
           <div class="terminal-body">
             <div class="cli">
-              sydes incident analyze logs/*.log \<br>
-              &nbsp;&nbsp;--query "why are checkout requests failing?" \<br>
-              &nbsp;&nbsp;--grep "503"<br>
+              <span class="cmd-line"><span class="prompt">$</span> sydes incident analyze logs/*.log \</span><br>
+              &nbsp;&nbsp;<span class="flag">--query</span> <span class="arg">"why are checkout requests failing?"</span> \<br>
+              &nbsp;&nbsp;<span class="flag">--grep</span> <span class="arg">"503"</span><br>
               <br>
-              → api-gateway → db-proxy timeouts causing checkout 503s
+              <span class="result">→ api-gateway → db-proxy timeouts causing checkout 503s</span>
             </div>
           </div>
         </div>
@@ -322,10 +354,10 @@
           </div>
           <div class="terminal-body">
             <div class="cli">
-              sydes incident analyze logs/api/*.log logs/auth/*.log logs/db/*.log \<br>
-              &nbsp;&nbsp;--query "why are session lookups failing?"<br>
+              <span class="cmd-line"><span class="prompt">$</span> sydes incident analyze logs/api/*.log logs/auth/*.log logs/db/*.log \</span><br>
+              &nbsp;&nbsp;<span class="flag">--query</span> <span class="arg">"why are session lookups failing?"</span><br>
               <br>
-              → cache_unavailable in auth-service causing cross-service session failures
+              <span class="result">→ cache_unavailable in auth-service causing cross-service session failures</span>
             </div>
           </div>
         </div>
@@ -344,13 +376,13 @@
           </div>
           <div class="terminal-body">
             <div class="cli">
-              sydes incident analyze logs/*.log \<br>
-              &nbsp;&nbsp;--from "2026-03-25T13:34:00" \<br>
-              &nbsp;&nbsp;--to "2026-03-25T13:35:00"<br>
+              <span class="cmd-line"><span class="prompt">$</span> sydes incident analyze logs/*.log \</span><br>
+              &nbsp;&nbsp;<span class="flag">--from</span> <span class="arg">"2026-03-25T13:34:00"</span> \<br>
+              &nbsp;&nbsp;<span class="flag">--to</span> <span class="arg">"2026-03-25T13:35:00"</span><br>
               <br>
-              13:34:05 → latency spike (api-gateway)<br>
-              13:34:12 → db connections exhausted<br>
-              13:34:15 → 503 surge
+              <span class="result timeline-row"><span class="timeline-time">13:34:05</span><span>→ latency spike (api-gateway)</span></span>
+              <span class="result timeline-row"><span class="timeline-time">13:34:12</span><span>→ db connections exhausted</span></span>
+              <span class="result timeline-row"><span class="timeline-time">13:34:15</span><span>→ 503 surge</span></span>
             </div>
           </div>
         </div>
