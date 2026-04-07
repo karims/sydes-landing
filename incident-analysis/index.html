@@ -223,7 +223,7 @@
       }
 
       .install .terminal {
-        max-width: 240px;
+        max-width: 720px;
         background: rgba(255,255,255,0.6);
       }
 
@@ -350,6 +350,8 @@
           <div class="terminal-body">
             <div class="cli">
               <span class="cmd-line"><span class="prompt">$</span> pip install sydes</span>
+              <br>
+              <span class="cmd-line"><span class="prompt">$</span> export OPENAI_API_KEY=your_openai_api_key</span>
             </div>
           </div>
         </div>
@@ -370,10 +372,10 @@
           <div class="terminal-body">
             <div class="cli">
               <span class="cmd-line"><span class="prompt">$</span> sydes incident analyze logs/*.log \</span><br>
-              &nbsp;&nbsp;<span class="flag">--query</span> <span class="arg">"why are checkout requests failing?"</span> \<br>
-              &nbsp;&nbsp;<span class="flag">--grep</span> <span class="arg">"503"</span><br>
-              <br>
-              <span class="result">→ api-gateway → db-proxy timeouts causing checkout 503s</span>
+              &nbsp;&nbsp;<span class="flag">--model</span> <span class="arg">openai:gpt-4.1-mini</span> \<br>
+              &nbsp;&nbsp;<span class="flag">--require-model</span> \<br>
+              &nbsp;&nbsp;<span class="flag">--query</span> <span class="arg">"why are checkout requests timing out?"</span> \<br>
+              &nbsp;&nbsp;<span class="flag">--grep</span> <span class="arg">"/checkout|timeout|payment"</span>
             </div>
           </div>
         </div>
@@ -394,9 +396,9 @@
           <div class="terminal-body">
             <div class="cli">
               <span class="cmd-line"><span class="prompt">$</span> sydes incident analyze logs/api/*.log logs/auth/*.log logs/db/*.log \</span><br>
-              &nbsp;&nbsp;<span class="flag">--query</span> <span class="arg">"why are session lookups failing?"</span><br>
-              <br>
-              <span class="result">→ cache_unavailable in auth-service causing cross-service session failures</span>
+              &nbsp;&nbsp;<span class="flag">--model</span> <span class="arg">openai:gpt-4.1-mini</span> \<br>
+              &nbsp;&nbsp;<span class="flag">--require-model</span> \<br>
+              &nbsp;&nbsp;<span class="flag">--query</span> <span class="arg">"why are session lookups failing?"</span>
             </div>
           </div>
         </div>
@@ -417,12 +419,54 @@
           <div class="terminal-body">
             <div class="cli">
               <span class="cmd-line"><span class="prompt">$</span> sydes incident analyze logs/*.log \</span><br>
+              &nbsp;&nbsp;<span class="flag">--model</span> <span class="arg">openai:gpt-4.1-mini</span> \<br>
+              &nbsp;&nbsp;<span class="flag">--require-model</span> \<br>
               &nbsp;&nbsp;<span class="flag">--from</span> <span class="arg">"2026-03-25T13:34:00"</span> \<br>
-              &nbsp;&nbsp;<span class="flag">--to</span> <span class="arg">"2026-03-25T13:35:00"</span><br>
+              &nbsp;&nbsp;<span class="flag">--to</span> <span class="arg">"2026-03-25T13:35:00"</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="rule" />
+
+      <section class="command-example">
+        <div class="section-label">/* report excerpt */</div>
+        <p class="workflow-note">A trimmed report from a real run.</p>
+
+        <div class="terminal">
+          <div class="terminal-bar">
+            <span class="terminal-dot"></span>
+            <span class="terminal-dot"></span>
+            <span class="terminal-dot"></span>
+          </div>
+          <div class="terminal-body">
+            <div class="cli">
+              <span class="result">[1/7] Loading logs...</span>
+              <span class="result">[2/7] Interpreting events...</span>
+              <span class="result">[3/7] Consolidating patterns...</span>
+              <span class="result">[4/7] Building timeline...</span>
+              <span class="result">[5/7] Building reasoning context...</span>
+              <span class="result">[6/7] Generating hypotheses...</span>
+              <span class="result">[7/7] Rendering report...</span>
               <br>
-              <span class="result timeline-row"><span class="timeline-time">13:34:05</span><span>→ latency spike (api-gateway)</span></span>
-              <span class="result timeline-row"><span class="timeline-time">13:34:12</span><span>→ db connections exhausted</span></span>
-              <span class="result timeline-row"><span class="timeline-time">13:34:15</span><span>→ 503 surge</span></span>
+              <span class="cmd-line">== INCIDENT SUMMARY ==</span><br>
+              <span class="result">Gateway upstream timeout on /checkout likely contributed to downstream payment call timeout and retries</span>
+              <br>
+              <span class="cmd-line">== INCIDENT WINDOW ==</span><br>
+              <span class="result">Mode: exact</span>
+              <span class="result">Start: 2026-03-31T11:15:00+00:00</span>
+              <span class="result">End: 2026-03-31T11:15:05+00:00</span>
+              <span class="result">Timeline events: 12</span>
+              <br>
+              <span class="cmd-line">== TOP HYPOTHESIS ==</span><br>
+              <span class="result">Gateway upstream timeout on /checkout likely contributed to downstream payment call timeout and retries</span>
+              <span class="result">The earliest high-severity signal is the gateway error reporting an upstream timeout servicing /checkout at 11:15:00, followed by API warning about waiting on payment dependency and then API error payment call timeout at 11:15:02...</span>
+              <br>
+              <span class="cmd-line">== CONFIDENCE / STRENGTH ==</span><br>
+              <span class="result">Strength: 0.70</span>
+              <br>
+              <span class="result">...</span>
             </div>
           </div>
         </div>
