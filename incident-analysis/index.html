@@ -339,6 +339,19 @@
 
       <hr class="rule" />
 
+      <section>
+        <div class="section-label">/* what incident analysis does */</div>
+
+        <ul class="bullets">
+          <li>reconstructs incident timelines from logs</li>
+          <li>identifies likely root causes</li>
+          <li>surfaces supporting evidence</li>
+          <li>connects failure signals across services</li>
+        </ul>
+      </section>
+
+      <hr class="rule" />
+
       <section class="install">
         <div class="section-label">/* quickstart */</div>
         <div class="terminal">
@@ -351,7 +364,7 @@
             <div class="cli">
               <span class="cmd-line"><span class="prompt">$</span> pip install sydes</span>
               <br>
-              <span class="cmd-line"><span class="prompt">$</span> export OPENAI_API_KEY=your_openai_api_key</span>
+              <span class="cmd-line"><span class="prompt">$</span> export OPENAI_API_KEY=your_key</span>
             </div>
           </div>
         </div>
@@ -361,7 +374,7 @@
 
       <section class="command-example">
         <div class="section-label">/* query + grep */</div>
-        <p class="workflow-note">Ask a question and narrow the evidence with an exact pattern.</p>
+        <p class="workflow-note">Ask a focused question and narrow to a concrete signal.</p>
 
         <div class="terminal">
           <div class="terminal-bar">
@@ -374,8 +387,8 @@
               <span class="cmd-line"><span class="prompt">$</span> sydes incident analyze logs/*.log \</span><br>
               &nbsp;&nbsp;<span class="flag">--model</span> <span class="arg">openai:gpt-4.1-mini</span> \<br>
               &nbsp;&nbsp;<span class="flag">--require-model</span> \<br>
-              &nbsp;&nbsp;<span class="flag">--query</span> <span class="arg">"why are checkout requests timing out?"</span> \<br>
-              &nbsp;&nbsp;<span class="flag">--grep</span> <span class="arg">"/checkout|timeout|payment"</span>
+              &nbsp;&nbsp;<span class="flag">--query</span> <span class="arg">"Why is checkout failing?"</span> \<br>
+              &nbsp;&nbsp;<span class="flag">--grep</span> <span class="arg">"timeout|checkout"</span>
             </div>
           </div>
         </div>
@@ -384,8 +397,8 @@
       <hr class="rule" />
 
       <section class="command-example">
-        <div class="section-label">/* multiple service logs */</div>
-        <p class="workflow-note">Analyze failures across services in a single run.</p>
+        <div class="section-label">/* multi-service logs */</div>
+        <p class="workflow-note">Reconstruct the failure path across services.</p>
 
         <div class="terminal">
           <div class="terminal-bar">
@@ -395,10 +408,10 @@
           </div>
           <div class="terminal-body">
             <div class="cli">
-              <span class="cmd-line"><span class="prompt">$</span> sydes incident analyze logs/api/*.log logs/auth/*.log logs/db/*.log \</span><br>
+              <span class="cmd-line"><span class="prompt">$</span> sydes incident analyze api.log worker.log gateway.log \</span><br>
               &nbsp;&nbsp;<span class="flag">--model</span> <span class="arg">openai:gpt-4.1-mini</span> \<br>
               &nbsp;&nbsp;<span class="flag">--require-model</span> \<br>
-              &nbsp;&nbsp;<span class="flag">--query</span> <span class="arg">"why are session lookups failing?"</span>
+              &nbsp;&nbsp;<span class="flag">--query</span> <span class="arg">"Why is checkout failing?"</span>
             </div>
           </div>
         </div>
@@ -407,8 +420,8 @@
       <hr class="rule" />
 
       <section class="command-example">
-        <div class="section-label">/* timeline window */</div>
-        <p class="workflow-note">Constrain the incident window to reconstruct what changed minute by minute.</p>
+        <div class="section-label">/* time window */</div>
+        <p class="workflow-note">Narrow the incident window before reasoning.</p>
 
         <div class="terminal">
           <div class="terminal-bar">
@@ -421,8 +434,9 @@
               <span class="cmd-line"><span class="prompt">$</span> sydes incident analyze logs/*.log \</span><br>
               &nbsp;&nbsp;<span class="flag">--model</span> <span class="arg">openai:gpt-4.1-mini</span> \<br>
               &nbsp;&nbsp;<span class="flag">--require-model</span> \<br>
-              &nbsp;&nbsp;<span class="flag">--from</span> <span class="arg">"2026-03-25T13:34:00"</span> \<br>
-              &nbsp;&nbsp;<span class="flag">--to</span> <span class="arg">"2026-03-25T13:35:00"</span>
+              &nbsp;&nbsp;<span class="flag">--query</span> <span class="arg">"Why is checkout failing?"</span> \<br>
+              &nbsp;&nbsp;<span class="flag">--from</span> <span class="arg">2026-04-03T15:05:00</span> \<br>
+              &nbsp;&nbsp;<span class="flag">--to</span> <span class="arg">2026-04-03T15:10:00</span>
             </div>
           </div>
         </div>
@@ -443,33 +457,44 @@
           <div class="terminal-body">
             <div class="cli">
               <span class="result">[1/7] Loading logs...</span>
-              <span class="result">[2/7] Interpreting events...</span>
-              <span class="result">[3/7] Consolidating patterns...</span>
-              <span class="result">[4/7] Building timeline...</span>
-              <span class="result">[5/7] Building reasoning context...</span>
-              <span class="result">[6/7] Generating hypotheses...</span>
-              <span class="result">[7/7] Rendering report...</span>
+              <span class="result">...</span>
               <br>
               <span class="cmd-line">== INCIDENT SUMMARY ==</span><br>
-              <span class="result">Gateway upstream timeout on /checkout likely contributed to downstream payment call timeout and retries</span>
-              <br>
-              <span class="cmd-line">== INCIDENT WINDOW ==</span><br>
-              <span class="result">Mode: exact</span>
-              <span class="result">Start: 2026-03-31T11:15:00+00:00</span>
-              <span class="result">End: 2026-03-31T11:15:05+00:00</span>
-              <span class="result">Timeline events: 12</span>
+              <span class="result">API checkout failures likely related to increasing db-proxy latency leading to downstream gateway checkout failures</span>
               <br>
               <span class="cmd-line">== TOP HYPOTHESIS ==</span><br>
-              <span class="result">Gateway upstream timeout on /checkout likely contributed to downstream payment call timeout and retries</span>
-              <span class="result">The earliest high-severity signal is the gateway error reporting an upstream timeout servicing /checkout at 11:15:00, followed by API warning about waiting on payment dependency and then API error payment call timeout at 11:15:02...</span>
+              <span class="result">API checkout failures likely related to increasing db-proxy latency leading to downstream gateway checkout failures</span>
+              <span class="result">The earliest high-severity event is a warning in the API service indicating rising db-proxy latency affecting checkout. This is followed by a warning in the gateway service reporting checkout failures linked to upstream latency increase...</span>
               <br>
-              <span class="cmd-line">== CONFIDENCE / STRENGTH ==</span><br>
-              <span class="result">Strength: 0.70</span>
+              <span class="cmd-line">== AFFECTED SERVICES ==</span><br>
+              <span class="result">api, gateway</span>
               <br>
               <span class="result">...</span>
             </div>
           </div>
         </div>
+      </section>
+
+      <hr class="rule" />
+
+      <section>
+        <div class="section-label">/* why this is useful */</div>
+
+        <div class="copy">
+          When incidents happen, engineers are forced to scan thousands of lines across multiple services, hosts, and timestamps. The problem is not lack of data - it is lack of structure. Sydes reconstructs what happened from logs so failures can be investigated as evidence, not raw text.
+        </div>
+      </section>
+
+      <hr class="rule" />
+
+      <section>
+        <div class="section-label">/* how it works */</div>
+
+        <ul class="steps">
+          <li>1. parse and interpret raw logs</li>
+          <li>2. group related failure signals into events and clusters</li>
+          <li>3. build a timeline and generate a root-cause hypothesis</li>
+        </ul>
       </section>
 
       <hr class="rule" />
