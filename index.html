@@ -376,11 +376,46 @@ The API Gateway service is experiencing repeated HTTP 503 errors for checkout en
 `,
 
 architecture: `
+architecture: `
 <strong>System Architecture</strong>
-<p>Coming soon. Sydes will analyze codebases to reconstruct backend architecture, services, routes, and dependencies.</p>
-<div class="cli">
-coming soon
+<p>Sydes analyzes your codebase to reconstruct API routes, handlers, service boundaries, downstream calls, and important sinks like database writes.</p>
+
+<div class="terminal">
+<div class="terminal-bar">
+<span class="terminal-dot"></span>
+<span class="terminal-dot"></span>
+<span class="terminal-dot"></span>
 </div>
+<div class="terminal-body">
+<div class="cli">
+$ sydes routes --repo api=./api<br>
+<br>
+Discovered routes:<br>
+&nbsp;&nbsp;GET&nbsp;&nbsp;/users&nbsp;&nbsp;&nbsp;&nbsp;handler=get_all_users&nbsp;&nbsp;&nbsp;&nbsp;file=main.py<br>
+&nbsp;&nbsp;POST /users&nbsp;&nbsp;&nbsp;&nbsp;handler=create_user&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;file=main.py<br>
+<br>
+$ sydes trace "/users" --method POST --repo api=./api<br>
+<br>
+Matched endpoint:<br>
+&nbsp;&nbsp;POST /users → main.py:create_user<br>
+<br>
+Flow:<br>
+&nbsp;&nbsp;1. receive request<br>
+&nbsp;&nbsp;2. validate payload<br>
+&nbsp;&nbsp;3. create user model<br>
+&nbsp;&nbsp;4. db.add(user)<br>
+&nbsp;&nbsp;5. db.commit()<br>
+&nbsp;&nbsp;6. db.refresh(user)<br>
+<br>
+Sinks:<br>
+&nbsp;&nbsp;- database write<br>
+<br>
+Artifacts:<br>
+&nbsp;&nbsp;~/.sydes/workspaces/.../trace_graph.json<br>
+</div>
+</div>
+</div>
+`
 `,
 
 tests: `
